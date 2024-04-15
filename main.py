@@ -1,5 +1,3 @@
-import signal
-import sys
 import random
 import threading
 import time
@@ -10,17 +8,6 @@ from Entities.Queues.ReadyPizzaQueue import ReadyPizzaQueue
 from Entities.Queues.PullFromOvenQueue import PullFromOvenQueue
 from Entities.Oven import Oven
 from Entities.Worker import Worker
-
-# Global variable to indicate whether the program should continue running
-running = True
-
-
-def signal_handler(signal, frame):
-    global running
-    print("Exiting gracefully...")
-    running = False
-    # Perform cleanup tasks here if necessary
-    sys.exit(0)
 
 
 def setup_queues():
@@ -67,10 +54,6 @@ def main():
     # Start the order factory thread
     order_factory_thread = threading.Thread(target=run_order_factory, args=(num_orders, interval_min, interval_max))
     order_factory_thread.start()
-
-    # Register signal handler for termination signals
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
 
     # Wait for the order factory to finish creating orders
     order_factory_thread.join()
